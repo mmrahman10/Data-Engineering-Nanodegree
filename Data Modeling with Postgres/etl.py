@@ -9,65 +9,79 @@ import glob
 import psycopg2
 import pandas as pd
 from sql_queries import *
+from typing import Any
 
 
-def process_song_file(cur: any, filepath: str):
+def process_song_file(cur, filepath):
     """
-    This function will processes a single song file.
+    This function will processes the first part of ETL (ETL on the first dataset, song_data) 
+    to create the songs and artists Dimensional Tables.
+    
+    Though this function will processes a single song file, 
+    it will call from main to process all songs file in filepath one by one. 
+    
     @param-1 cur: the database cursor
     @param-2 filepath: the path to the song file
     """
     # open song file
-    df =  pd.read_json(filepath, typ='series')
+    df_song =  pd.read_json(filepath, typ='series')
 
     # insert song record
-    song_data = df[["song_id", "title", "artist_id", "year", "duration"]] 
+    song_data = df_song[["song_id", "title", "artist_id", "year", "duration"]] 
     cur.execute(song_table_insert, song_data)
     
     # insert artist record
-    artist_data =  df[["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]]
+    artist_data =  df_song[["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]]
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
     """
-    This function will processes a single log file.
+    This function will processes the second part of ETL (ETL on the second dataset, log_data)
+    to create the time and users dimensional tables, as well as the songplays fact table.
+    
+    Though this function will processes a single log file, it will call from main to process 
+    all songs file in filepath one by one 
+    
     @param-1 cur: the database cursor
     @param-2 filepath: the path to the log file
     """
     # open log file
-    df = pd.read_json(filepath, lines=True)
+    df_log = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df_filter = df[df['page']=='NextSong']
+    df_filter = df_log[df_log['page']=='NextSong']
 
     # convert timestamp column to datetime
-    t =  pd.to_datetime(df["ts"], unit='ms')
+    df_log["ts"] = pd.to_datetime(df_log["ts"], unit='ms')
     
     # insert time data records
-    timestamps = df["ts"].dt.time
-    hrs = df["ts"].dt.hour
-    days = df["ts"].dt.day
-    weeks = df["ts"].dt.week
-    months = df["ts"].dt.month
-    years = df["ts"].dt.year
-    weekdays = df["ts"].dt.weekday
+    timestamps = df_log["ts"].dt.time
+    hrs = df_log["ts"].dt.hour
+    days = df_log["ts"].dt.day
+    weeks = df_log["ts"].dt.week
+    months = df_log["ts"].dt.month
+    years = df_log["ts"].dt.year
+    weekdays = df_log["ts"].dt.weekday
     column_labels = ("timestamp", "hour", "day", "week of year", "month", "year", "weekday")
     time_data = pd.DataFrame({"timestamp": timestamps, "hour": hrs, "day": days, "week": weeks, "month": months, "year": years, "weekday": weekdays})
     time_df =time_data 
 
+    #Insert Records into Time Table
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df =  df[["userId", "firstName", "lastName", "gender", "level"]]
-
+    user_df = df_log[["userId", "firstName", "lastName", "gender", "level"]]
+    #drop all duplicates rows and having emty and/or NAN values for usetId
+    user_df = user_df.drop_duplicates().dropna()
+    
     # insert user records
     for i, row in user_df.iterrows():
         cur.execute(user_table_insert, row)
 
     # insert songplay records
-    for index, row in df.iterrows():
+    for index, row in df_log.iterrows():
         
         # get songid and artistid from song and artist tables
         cur.execute(song_select, (row.song, row.artist, row.length))
@@ -80,7 +94,9 @@ def process_log_file(cur, filepath):
 
         # insert songplay record
         songplay_data = (row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
-        cur.execute(songplay_table_insert, songplay_data)
+        if row.userId != "":
+            cur.execute(songplay_table_insert, songplay_data)
+           
 
 
 def process_data(cur, conn, filepath, func):

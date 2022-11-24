@@ -9,19 +9,19 @@ def create_database():
     - Returns the connection and cursor to sparkifydb
     """
     
-    # connect to default database
+    # Connect to default database
     conn = psycopg2.connect("host=127.0.0.1 dbname=studentdb user=student password=student")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
     
-    # create sparkify database with UTF8 encoding
+    # Create sparkify database with UTF8 encoding
     cur.execute("DROP DATABASE IF EXISTS sparkifydb")
     cur.execute("CREATE DATABASE sparkifydb WITH ENCODING 'utf8' TEMPLATE template0")
 
-    # close connection to default database
+    # Close connection to default database
     conn.close()    
     
-    # connect to sparkify database
+    # Connect to sparkify database
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
     
@@ -30,34 +30,34 @@ def create_database():
 
 def drop_tables(cur, conn):
     """
-    Drops each table using the queries in `drop_table_queries` list.
+    This function DROPS each table using the queries in drop_table_queries list created sql_queris.py scripts.
     """
-    for query in drop_table_queries:
-        cur.execute(query)
+    for query_list in drop_table_queries:
+        cur.execute(query_list)
         conn.commit()
 
 
 def create_tables(cur, conn):
     """
-    Creates each table using the queries in `create_table_queries` list. 
+    This function CREATES each table using the queries in create_table_queries created sql_queris.py scripts. 
     """
-    for query in create_table_queries:
-        cur.execute(query)
+    for query_list in create_table_queries:
+        cur.execute(query_list)
         conn.commit()
 
 
 def main():
     """
-    - Drops (if exists) and Creates the sparkify database. 
+    This main function creates and connect to the database, do all drop/create tables and finally closes connection.
+    The top down approach are as follows
     
-    - Establishes connection with the sparkify database and gets
-    cursor to it.  
-    
-    - Drops all the tables.  
-    
-    - Creates all tables needed. 
-    
-    - Finally, closes the connection. 
+    1. Establishes connection to default database studentdb using create_database() function.
+    2. Drops (if exists) and Creates the sparkify database using create_database() function.
+    3. Close connection to default database
+    4. Establishes connection to sparkify database and gets cursor to it.
+    5. Drops all the tables using drop_tables(cur, conn) function
+    6. Creates all tables needed using create_tables(cur, conn) function and  
+    7. Finally, closes the connection. 
     """
     cur, conn = create_database()
     
