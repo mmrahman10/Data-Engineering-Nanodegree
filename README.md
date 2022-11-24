@@ -6,7 +6,7 @@ All projects of Udacity's [Data Engineering Nanodegree](https://www.udacity.com/
 ### Data Modeling
 Learn to create relational and NoSQL data models to fit the diverse needs of data consumers. Use ETL to build databases in PostgreSQL and Apache Cassandra.
 
-[DATA MODELING WITH POSTGRES](https://github.com/mmrahman10/Udacity-Data-Engineering-Nanodegree/tree/master/Data%20Modeling%20with%20Postgres)
+[DATA MODELING WITH POSTGRES]([https://github.com/mmrahman10/Udacity-Data-Engineering-Nanodegree/tree/master/Data%20Modeling%20with%20Postgres](https://github.com/mmrahman10/Data-Engineering-Nanodegree/tree/main/Data%20Modeling%20with%20Postgres))
 
 [DATA MODELING WITH APACHE CASSANDRA](https://github.com/mmrahman10/Udacity-Data-Engineering-Nanodegree/tree/master/Data%20Modeling%20with%20Cassandra)
 
