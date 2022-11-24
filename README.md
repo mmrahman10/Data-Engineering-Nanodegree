@@ -26,7 +26,7 @@ Schedule, automate, and monitor data pipelines using Apache Airflow. Run data qu
 [DATA PIPELINES WITH AIRFLOW](https://github.com/mmrahman10/Udacity-Data-Engineering-Nanodegree/tree/master/Data%20Pipeline)
 
 ### Capstone Project
-Combine what you've learned throughout the program to build your own data engineering portfolio project.
+Combine all learning throughout the program to build my own data engineering portfolio project.
 
 
 
