@@ -8,7 +8,7 @@ Learn to create relational and NoSQL data models to fit the diverse needs of dat
 
 [DATA MODELING WITH POSTGRES](https://github.com/mmrahman10/Data-Engineering-Nanodegree/tree/main/Data%20Modeling%20with%20Postgres)
 
-[DATA MODELING WITH APACHE CASSANDRA](https://github.com/mmrahman10/Udacity-Data-Engineering-Nanodegree/tree/master/Data%20Modeling%20with%20Cassandra)
+[DATA MODELING WITH APACHE CASSANDRA](https://github.com/mmrahman10/Udacity-Data-Engineering-Nanodegree/tree/mail/Data%20Modeling%20with%20Cassandra)
 
 ### Cloud Data Warehouses
 Sharpen your data warehousing skills and deepen your understanding of data infrastructure. Create cloud-based data warehouses on Amazon Web Services (AWS).
